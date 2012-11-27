@@ -13,4 +13,3 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
-body {font-size:12px;}
