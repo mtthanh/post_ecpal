@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>PostEcpal</title>
+  <%= stylesheet_link_tag :style %>
   <%= javascript_include_tag "json2" %>
   <%= javascript_include_tag "jquery-min" %>
   <%= javascript_include_tag "underscore" %>
@@ -9,8 +10,10 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
-
+<div id="wrapper">
+    <div id="content">
+        <%= yield %>
+    </div>
+</div>
 </body>
 </html>
