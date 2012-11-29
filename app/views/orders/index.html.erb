@@ -1,31 +1,206 @@
 <h1>Listing orders</h1>
-
-<table>
+<div id="order-view">
+    
+<table id="table-list">
+    <thead>
   <tr>
-    <th>Id</th>
+    <th><input type="checkbox" id="toggle-all"/></th>
     <th>Order number</th>
     <th>Order date</th>
     <th>Status</th>
     <th>Total</th>
-    <th></th>
-    <th></th>
-    <th></th>
+    <th>Action</th>
   </tr>
-
-<% @orders.each do |order| %>
-  <tr>
-    <td><%= order.id %></td>
-    <td><%= order.order_number %></td>
-    <td><%= order.order_date %></td>
-    <td><%= order.status %></td>
-    <td><%= order.total %></td>
-    <td><%= link_to 'Show', order %></td>
-    <td><%= link_to 'Edit', edit_order_path(order) %></td>
-    <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
+  </thead>
+   <tbody>
+   </tbody>
 </table>
-
 <br />
 
-<%= link_to 'New Order', new_order_path %>
+<input type="button" value="New Order" id="new-order"/>
+<input type="button" value="Delete" id="delete-order"/>
+<div id="order-form">
+
+</div>
+</div>
+<script>
+    var status_options = <%= raw Order::STATUS.to_json %>;
+    
+    var OrderModel = Backbone.Model.extend({
+        urlRoot: '/orders',
+        defaults: {
+            id: null,
+            order_number: "",
+            order_date: (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + (new Date()).getDate(),
+            order_status: "<% Order::STATUS_PENDING %>",
+            total: 0
+        }
+    });
+    
+    var OrderList = Backbone.Collection.extend({
+        model: OrderModel,
+        url: '/orders'
+    });
+    
+    Orders = new OrderList();
+    
+    var OrderView = Backbone.View.extend({
+        events: {
+            "change select": "changeStatus",
+            "click .edit-order": "editOrder",
+            "click .remove-order": "removeOrder"
+        },
+        initialize: function(){
+            //this.model.on('change', this.test, this);
+            this.model.on('destroy', this.remove, this);
+            this.model.on('sync', this.changeInfo, this);
+        },
+        tagName: 'tr',
+        render: function(){
+            var html = '<td><input type="checkbox" value="' + this.model.get('id') + '" class="cb-order"/></td>';
+            html += '<td class="order_number">' + this.model.get('order_number') + '</td>';
+            html += '<td class="center order_status">' + this.model.get('order_date') + '</td>';
+            html += '<td><select class="status">';
+            for (index in status_options){
+                html += '<option value="' + index + '"' + ((this.model.get('status') == index)? ' selected="selected"': '') + '>' + status_options[index] + '</option>';
+            }
+            html += '</select></td>';
+            html += '<td class="right total">' + this.model.get('total') + '</td>';
+            html += '<td class="right"><a href="javascript:void(0);" class="edit-order">Edit</a><a href="javascript:void(0);" class="remove-order">Remove</a></td>';
+            this.$el.html(html); 
+        },
+        remove: function(){
+           this.$el.remove(); 
+        },
+        changeStatus: function(e){
+            value = this.$(".status").val();
+            this.model.save({status: value});
+        },
+        editOrder: function(){
+            var order_form_view = new OrderFormView({model: this.model});
+            $("#order-form").html(order_form_view.el);
+        },
+        removeOrder: function(){
+            if (confirm("Do you want to delete this orders?")){
+                this.model.destroy();
+            }
+        },
+        changeInfo: function(){
+            this.$(".total").html(this.model.get('total'));
+            this.$(".order_number").html(this.model.get('order_number'));
+            this.$(".order_date").html(this.model.get('order_date'));
+            this.$(".status").val(this.model.get('status'));
+        }
+    });
+    
+    var OrderFormView = Backbone.View.extend({
+        events: {
+            'click #update-order': "saveOrder"
+        },
+        initialize: function(){
+            this.is_new = this.model.isNew();
+            this.model.on('sync', this.saveSuccess, this);
+            this.render();
+        },
+        tagName: 'fieldset',
+        render: function(){
+            var html = '<legend>' + ((this.model.isNew())? 'New' : 'Edit') + ' Order</legend>';
+            html += '<table id="table-form"><tr>';
+            html += '<th><label>Order Number</label></th>';
+            html += '<td><input type="text" class="order_number" value="' + this.model.get("order_number") + '"/></td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<th><label>Order Date</label></th>';
+            html += '<td><input type="text" class="order_date" value="' + this.model.get("order_date") + '"/></td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<th><label>Status</label></th>';
+            html += '<td><select class="status">';
+            for (index in status_options){
+                html += '<option value="' + index + '"' + ((this.model.get('status') == index)? ' selected="selected"': '') + '>' + status_options[index] + '</option>';
+            }
+            html += '</select></td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<th><label>Total</label></th>';
+            html += '<td><input type="text" class="total" value="' + this.model.get("total") + '"/></td>';
+            html += '</tr></table>';
+            html += '<input type="button" id="update-order" value="' + ((this.model.isNew())? 'Create' : 'Update') + ' Order"/>';
+            this.$el.html(html);
+        },
+        saveOrder: function(){
+            this.model.save({
+                order_number: this.$el.find(".order_number").val(),
+                order_date: this.$el.find(".order_date").val(),
+                status: this.$el.find(".status").val(),
+                total: this.$el.find(".total").val()
+            });
+        },
+        saveSuccess: function(){
+            if (this.is_new){
+                Orders.add(this.model);
+            } else {
+                
+            }
+            this.remove();
+        }
+    });
+    
+    var AppView = Backbone.View.extend({
+        el: $("#order-view"),
+        
+        events: {
+            "click #toggle-all": "selectAll",
+            "click #new-order": "newOrder",
+            "click #delete-order": "deleteOrders"
+        },
+        
+        initialize: function(){
+            this.new_order = this.$("#new-order");
+            this.all_checkbox = this.$("#toggle-all");
+            
+            Orders.on('add', this.addOne, this);
+            Orders.on('reset', this.addAll, this);
+            //Orders.on('change', this.changeOrderInfo, this);
+            //Orders.on('all', this.reset, this);
+            
+            Orders.fetch();
+        },
+        render: function(){
+            // this.collection.forEach(this.addOne, this);
+            // $("#table-list tbody").append(this.$el.html());
+        },
+        addOne:function(orderItem){
+            order_view = new OrderView({model: orderItem});
+            order_view.render();
+            this.$("#table-list tbody").append(order_view.el);
+        },
+        addAll: function(){
+            Orders.each(this.addOne);
+        },
+        selectAll: function(){
+            if (this.all_checkbox.attr("checked")){
+                this.$(".cb-order").attr("checked", "true");
+            } else {
+                this.$(".cb-order").removeAttr("checked");
+            }
+        },
+        newOrder: function(){
+            var order_model = new OrderModel();
+            var order_form_view = new OrderFormView({model: order_model});
+            this.$("#order-form").html(order_form_view.el);
+        },
+        deleteOrders: function(){
+            if (confirm("Do you want to delete the selected orders?")){
+                this.$(".cb-order:checked").each(function(i, e){
+                    var order_model = Orders.get($(e).val());
+                    order_model.destroy();
+                });
+            }
+        }
+    });
+    
+    new AppView();
+    
+</script>
+
