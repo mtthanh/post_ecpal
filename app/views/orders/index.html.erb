@@ -1,7 +1,7 @@
 <h1>Listing orders</h1>
 <div id="order-view">
     
-<table id="table-list">
+<table id="table-list" cellspacing="0">
     <thead>
   <tr>
     <th><input type="checkbox" id="toggle-all"/></th>
@@ -57,7 +57,7 @@
         },
         tagName: 'tr',
         render: function(){
-            var html = '<td><input type="checkbox" value="' + this.model.get('id') + '" class="cb-order"/></td>';
+            var html = '<td class="center"><input type="checkbox" value="' + this.model.get('id') + '" class="cb-order"/></td>';
             html += '<td class="order_number">' + this.model.get('order_number') + '</td>';
             html += '<td class="center order_status">' + this.model.get('order_date') + '</td>';
             html += '<td><select class="status">';
@@ -66,7 +66,7 @@
             }
             html += '</select></td>';
             html += '<td class="right total">' + this.model.get('total') + '</td>';
-            html += '<td class="right"><a href="javascript:void(0);" class="edit-order">Edit</a><a href="javascript:void(0);" class="remove-order">Remove</a></td>';
+            html += '<td class="right"><a href="javascript:void(0);" class="edit-order">Edit</a>&nbsp;|&nbsp;<a href="javascript:void(0);" class="remove-order">Remove</a></td>';
             this.$el.html(html); 
         },
         remove: function(){
