@@ -1,6 +1,6 @@
 <h1>Listing orders</h1>
 <div id="order-view">
-    
+<form id="abdasd">
 <table id="table-list" cellspacing="0">
     <thead>
   <tr>
@@ -23,7 +23,13 @@
 
 </div>
 </div>
-<script>
+</form>
+<script type="text/javascript">
+        function picker()
+        {
+            alert("hohohohohoho");
+            $("#order_date").datepicker();
+        }
     var status_options = <%= raw Order::STATUS.to_json %>;
     
     var OrderModel = Backbone.Model.extend({
@@ -111,7 +117,7 @@
             html += '</tr>';
             html += '<tr>';
             html += '<th><label>Order Date</label></th>';
-            html += '<td><input type="text" class="order_date" value="' + this.model.get("order_date") + '"/></td>';
+            html += '<td><input type="text" class="order_date" onclick="picker()" id="order_date" value="' + this.model.get("order_date") + '"/></td>';
             html += '</tr>';
             html += '<tr>';
             html += '<th><label>Status</label></th>';

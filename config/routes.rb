@@ -1,7 +1,7 @@
 PostEcpal::Application.routes.draw do
   resources :orders
 
-
+match 'abc' => 'abc#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
