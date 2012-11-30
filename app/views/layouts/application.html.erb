@@ -3,10 +3,22 @@
 <head>
   <title>PostEcpal</title>
   <%= stylesheet_link_tag :style %>
-  <%= javascript_include_tag "json2" %>
-  <%= javascript_include_tag "jquery-min" %>
-  <%= javascript_include_tag "underscore" %>
-  <%= javascript_include_tag "backbone" %>
+  <%= javascript_include_tag :defaults %>
+    <%= javascript_include_tag 'jquery-1.3.2.min.js' %>
+    <%= javascript_include_tag 'jquery-ui-1.7.3.custom.min.js' %>
+    <%= javascript_include_tag 'jquery.alerts.js' %>
+    <%= javascript_include_tag 'thickbox.js' %>
+    <%= javascript_include_tag 'disableOnSubmit.js' %>
+    <%= javascript_include_tag 'superTables.js' %>
+    <%= javascript_include_tag 'jquery.autosize-min.js' %>
+    <%= javascript_include_tag "json2" %>
+    <%= javascript_include_tag "jquery-min" %>
+    <%= javascript_include_tag "underscore" %>
+    <%= javascript_include_tag "backbone" %>
+  
+  
+  
+
   <%= csrf_meta_tags %>
 </head>
 <body>
