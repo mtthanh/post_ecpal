@@ -11,27 +11,6 @@
  *= require_self
  *= require_tree .
  */
-@font-face {
-    font-family: 'HopkimTitle';
-    src: url('../fonts/hopkim-title-webfont.eot');
-    src: url('../fonts/hopkim-title-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/hopkim-title-webfont.woff') format('woff'),
-         url('../fonts/hopkim-title-webfont.ttf') format('truetype'),
-         url('../fonts/hopkim-title-webfont.svg#HopkimTitle') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'HopkimMedium';
-    src: url('../fonts/hopkim-m-webfont.eot');
-    src: url('../fonts/hopkim-m-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/hopkim-m-webfont.woff') format('woff'),
-         url('../fonts/hopkim-m-webfont.ttf') format('truetype'),
-         url('../fonts/hopkim-m-webfont.svg#HopkimMedium') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
 #wrapper{width: 100%;}
 #content{width: 980px; margin: 0 auto;}
 body{font-family: Arial, Helvetica, sans-serif; font-size: 12px;}
