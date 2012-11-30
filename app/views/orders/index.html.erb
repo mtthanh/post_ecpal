@@ -154,7 +154,7 @@
             this.remove();
         },
         picker: function(){
-            $("#order_date").datepicker();
+            $("#order_date").datepicker({dateFormat: 'yy/mm/dd'});
         }
     });
     
@@ -195,7 +195,7 @@
             var order_model = new OrderModel();
             var order_form_view = new OrderFormView({model: order_model});
             this.$("#order-form").html(order_form_view.el);
-            $("#order_date").datepicker();
+            $("#order_date").datepicker({dateFormat: 'yy/mm/dd'});
         },
         deleteOrders: function(){
             if (confirm("Do you want to delete the selected orders?")){
