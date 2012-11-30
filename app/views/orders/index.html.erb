@@ -161,14 +161,8 @@
             
             Orders.on('add', this.addOne, this);
             Orders.on('reset', this.addAll, this);
-            //Orders.on('change', this.changeOrderInfo, this);
-            //Orders.on('all', this.reset, this);
             
             Orders.fetch();
-        },
-        render: function(){
-            // this.collection.forEach(this.addOne, this);
-            // $("#table-list tbody").append(this.$el.html());
         },
         addOne:function(orderItem){
             order_view = new OrderView({model: orderItem});
