@@ -25,11 +25,12 @@
 </div>
 </form>
 <script type="text/javascript">
+        /*
         function picker()
-        {
-            alert("hohohohohoho");
-            $("#order_date").datepicker();
-        }
+                {
+                    $("#order_date").datepicker();
+                }*/
+
     var status_options = <%= raw Order::STATUS.to_json %>;
     
     var OrderModel = Backbone.Model.extend({
@@ -55,6 +56,7 @@
             "change select": "changeStatus",
             "click .edit-order": "editOrder",
             "click .remove-order": "removeOrder"
+
         },
         initialize: function(){
             //this.model.on('change', this.test, this);
@@ -101,7 +103,8 @@
     
     var OrderFormView = Backbone.View.extend({
         events: {
-            'click #update-order': "saveOrder"
+            'click #update-order': "saveOrder",
+            'click .order_date': "picker"
         },
         initialize: function(){
             this.is_new = this.model.isNew();
@@ -117,7 +120,7 @@
             html += '</tr>';
             html += '<tr>';
             html += '<th><label>Order Date</label></th>';
-            html += '<td><input type="text" class="order_date" onclick="picker()" id="order_date" value="' + this.model.get("order_date") + '"/></td>';
+            html += '<td><input type="text" class="order_date" id="order_date" value="' + this.model.get("order_date") + '"/></td>';
             html += '</tr>';
             html += '<tr>';
             html += '<th><label>Status</label></th>';
@@ -149,6 +152,9 @@
                 
             }
             this.remove();
+        },
+        picker: function(){
+            $("#order_date").datepicker();
         }
     });
     
@@ -189,6 +195,7 @@
             var order_model = new OrderModel();
             var order_form_view = new OrderFormView({model: order_model});
             this.$("#order-form").html(order_form_view.el);
+            $("#order_date").datepicker();
         },
         deleteOrders: function(){
             if (confirm("Do you want to delete the selected orders?")){
