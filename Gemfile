@@ -8,6 +8,7 @@ gem 'rails', '3.2.9'
 gem 'execjs'
 gem 'therubyracer'
 gem 'mysql2'
+gem 'fluent-logger', "~> 0.4.3"
 
 
 # Gems used only for assets and not required
