@@ -25,12 +25,6 @@
 </div>
 </form>
 <script type="text/javascript">
-        /*
-        function picker()
-                {
-                    $("#order_date").datepicker();
-                }*/
-
     var status_options = <%= raw Order::STATUS.to_json %>;
     
     var OrderModel = Backbone.Model.extend({
@@ -39,7 +33,7 @@
             id: null,
             order_number: "",
             order_date: (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + (new Date()).getDate(),
-            order_status: "<% Order::STATUS_PENDING %>",
+            status: "<% Order::STATUS_PENDING %>",
             total: 0
         }
     });
@@ -67,7 +61,7 @@
         render: function(){
             var html = '<td class="center"><input type="checkbox" value="' + this.model.get('id') + '" class="cb-order"/></td>';
             html += '<td class="order_number">' + this.model.get('order_number') + '</td>';
-            html += '<td class="center order_status">' + this.model.get('order_date') + '</td>';
+            html += '<td class="center order_date">' + this.model.get('order_date') + '</td>';
             html += '<td><select class="status">';
             for (index in status_options){
                 html += '<option value="' + index + '"' + ((this.model.get('status') == index)? ' selected="selected"': '') + '>' + status_options[index] + '</option>';
@@ -87,6 +81,7 @@
         editOrder: function(){
             var order_form_view = new OrderFormView({model: this.model});
             $("#order-form").html(order_form_view.el);
+            $(".order_date").datepicker({dateFormat: 'yy-mm-dd'});
         },
         removeOrder: function(){
             if (confirm("Do you want to delete this orders?")){
@@ -103,8 +98,7 @@
     
     var OrderFormView = Backbone.View.extend({
         events: {
-            'click #update-order': "saveOrder",
-            'click .order_date': "picker"
+            'click #update-order': "saveOrder"
         },
         initialize: function(){
             this.is_new = this.model.isNew();
@@ -120,7 +114,7 @@
             html += '</tr>';
             html += '<tr>';
             html += '<th><label>Order Date</label></th>';
-            html += '<td><input type="text" class="order_date" id="order_date" value="' + this.model.get("order_date") + '"/></td>';
+            html += '<td><input type="text" class="order_date" value="' + this.model.get("order_date") + '"/></td>';
             html += '</tr>';
             html += '<tr>';
             html += '<th><label>Status</label></th>';
@@ -152,9 +146,6 @@
                 
             }
             this.remove();
-        },
-        picker: function(){
-            this.$("#order_date").datepicker({dateFormat: 'yy-mm-dd'});
         }
     });
     
@@ -195,7 +186,7 @@
             var order_model = new OrderModel();
             var order_form_view = new OrderFormView({model: order_model});
             this.$("#order-form").html(order_form_view.el);
-            $("#order_date").datepicker({dateFormat: 'yy/mm/dd'});
+            $(".order_date").datepicker({dateFormat: 'yy-mm-dd'});
         },
         deleteOrders: function(){
             if (confirm("Do you want to delete the selected orders?")){
